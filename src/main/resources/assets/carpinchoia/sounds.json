@@ -1,0 +1,4 @@
+{
+  "carpincho_step": {"sounds": ["minecraft:step/grass1", "minecraft:step/grass2", "minecraft:step/grass3"]},
+  "carpincho_alert": {"sounds": ["minecraft:note/pling"]}
+}
