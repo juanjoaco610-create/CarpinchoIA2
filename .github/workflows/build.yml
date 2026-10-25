@@ -1,0 +1,29 @@
+name: Compilar mod
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.1.1
+      - name: Buscar el proyecto
+        id: buscar
+        run: |
+          F=$(find . -name settings.gradle -not -path "./.git/*" | head -1)
+          if [ -z "$F" ]; then echo "FALTA settings.gradle: no se subieron los archivos del mod"; ls -R | head -50; exit 1; fi
+          echo "dir=$(dirname "$F")" >> "$GITHUB_OUTPUT"
+      - name: Compilar
+        run: gradle build --no-daemon
+        working-directory: ${{ steps.buscar.outputs.dir }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geooda1-mod
+          path: "**/build/libs/*.jar"
